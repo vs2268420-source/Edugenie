@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>EduGenie — Learning Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">E</div>
+    <div>
+      <h1>EduGenie</h1>
+      <p>Google Gemini Powered Learning Assistant</p>
+    </div>
+  </div>
+  <label class="language">
+    <span>Language</span>
+    <select id="language">
+      <option>English</option>
+      <option>Hindi</option>
+      <option>Kannada</option>
+      <option>Telugu</option>
+    </select>
+  </label>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <span class="eyebrow">AI STUDY COMPANION</span>
+    <h2>Learn smarter, one concept at a time.</h2>
+    <p>Ask questions, generate quizzes, summarize study material, or create a personalized learning path.</p>
+  </section>
+
+  <nav class="tabs" aria-label="EduGenie features">
+    <button class="tab active" data-panel="ask-panel">Ask Anything</button>
+    <button class="tab" data-panel="quiz-panel">Generate Quiz</button>
+    <button class="tab" data-panel="summary-panel">Summarize</button>
+    <button class="tab" data-panel="path-panel">Learning Path</button>
+  </nav>
+
+  <section id="ask-panel" class="panel active">
+    <h3>Ask Anything</h3>
+    <p class="muted">Get a clear explanation of a concept or answer to a study question.</p>
+    <textarea id="question" rows="5" placeholder="Example: Explain photosynthesis in simple terms."></textarea>
+    <button class="primary" id="ask-btn">Ask EduGenie</button>
+    <div id="ask-result" class="result hidden"></div>
+  </section>
+
+  <section id="quiz-panel" class="panel">
+    <h3>Generate a Quiz</h3>
+    <p class="muted">Create five multiple-choice questions from a topic or your study material.</p>
+    <input id="quiz-topic" type="text" placeholder="Example: Quantum physics">
+    <div class="or">OR</div>
+    <input id="quiz-file" type="file" accept=".pdf,.docx,.pptx,.png,.jpg,.jpeg,.webp">
+    <small>Maximum {{ max_upload_mb }} MB. PDF, DOCX, PPTX, PNG, JPG/JPEG, WEBP.</small>
+    <button class="primary" id="quiz-btn">Generate Quiz</button>
+    <div id="quiz-result" class="result hidden"></div>
+  </section>
+
+  <section id="summary-panel" class="panel">
+    <h3>Summarize Study Material</h3>
+    <p class="muted">Paste notes or upload a document/image.</p>
+    <textarea id="summary-content" rows="8" placeholder="Paste your study material here..."></textarea>
+    <div class="or">OR UPLOAD</div>
+    <input id="summary-file" type="file" accept=".pdf,.docx,.pptx,.png,.jpg,.jpeg,.webp">
+    <small>Maximum {{ max_upload_mb }} MB.</small>
+    <button class="primary" id="summary-btn">Summarize Material</button>
+    <div id="summary-result" class="result hidden"></div>
+  </section>
+
+  <section id="path-panel" class="panel">
+    <h3>Personalized Learning Path</h3>
+    <p class="muted">Build a six-week plan around your level, goal, and available time.</p>
+    <div class="grid">
+      <label>Topic<input id="path-topic" type="text" placeholder="Python programming"></label>
+      <label>Current level
+        <select id="path-level">
+          <option>Beginner</option><option>Intermediate</option><option>Advanced</option>
+        </select>
+      </label>
+      <label>Goal<input id="path-goal" type="text" placeholder="Build web applications"></label>
+      <label>Hours per week<input id="path-hours" type="number" min="1" max="60" value="5"></label>
+    </div>
+    <button class="primary" id="path-btn">Create Learning Path</button>
+    <div id="path-result" class="result hidden"></div>
+  </section>
+
+  <div id="status" class="status" role="status" aria-live="polite"></div>
+</main>
+
+<footer>
+  EduGenie • AI-generated educational content should be reviewed against trusted learning resources.
+</footer>
+
+<script src="{{ url_for('static', path='js/app.js') }}"></script>
+</body>
+</html>
