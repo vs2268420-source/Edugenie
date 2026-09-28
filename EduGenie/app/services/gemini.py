@@ -46,6 +46,16 @@ class GeminiService:
         except Exception as exc:
             raise HTTPException(status_code=502, detail=f"Gemini request failed: {exc}") from exc
 
+    @staticmethod
+    def _clean_json_text(text: str) -> str:
+        cleaned = text.strip()
+        if cleaned.startswith("```"):
+            cleaned = cleaned.strip("`")
+            if cleaned.lower().startswith("json"):
+                cleaned = cleaned[4:].lstrip()
+            cleaned = cleaned.strip()
+        return cleaned
+
     def generate_structured(self, prompt: str, schema: type[T]) -> T:
         client = self._require_client()
         try:
@@ -65,10 +75,17 @@ class GeminiService:
                     return parsed
                 return schema.model_validate(parsed)
 
-            text = getattr(response, "text", "")
+            text = self._clean_json_text(getattr(response, "text", "") or "")
             if not text:
                 raise HTTPException(status_code=502, detail="Gemini returned no structured output.")
-            return schema.model_validate(json.loads(text))
+            try:
+                data = json.loads(text)
+            except json.JSONDecodeError as exc:
+                raise HTTPException(
+                    status_code=502,
+                    detail="Gemini returned malformed structured JSON.",
+                ) from exc
+            return schema.model_validate(data)
         except HTTPException:
             raise
         except Exception as exc:

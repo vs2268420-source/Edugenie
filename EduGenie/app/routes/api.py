@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import APIRouter, File, Form, Request, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
@@ -71,7 +71,10 @@ async def quiz(
             source = extract_text(data, suffix)
 
         if not source.strip():
-            raise ValueError("No readable study content was found in the uploaded file.")
+            raise HTTPException(
+                status_code=422,
+                detail="No readable study content was found in the uploaded file.",
+            )
 
     if not topic.strip() and not source.strip():
         return JSONResponse(
